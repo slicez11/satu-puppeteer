@@ -23,13 +23,34 @@ export async function POST(request: NextRequest) {
         if (isVercel) {
             const chromium = (await import("@sparticuz/chromium")).default;
             puppeteer = await import("puppeteer-core");
+            
+            // Configure chromium for Vercel with explicit path
+            const executablePath = await chromium.executablePath();
+            console.log('Chromium executable path:', executablePath);
+            
             launchOptions = {
                 ...launchOptions,
-                args: chromium.args,
-                executablePath: await chromium.executablePath(),
+                args: [
+                    ...chromium.args,
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--single-process',
+                    '--disable-gpu',
+                    '--disable-web-security',
+                    '--disable-features=VizDisplayCompositor'
+                ],
+                executablePath: executablePath,
             };
         } else {
             puppeteer = await import("puppeteer");
+            launchOptions = {
+                ...launchOptions,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            };
         }
 
         browser = await puppeteer.launch(launchOptions);

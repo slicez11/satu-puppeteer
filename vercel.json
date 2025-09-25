@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "src/app/api/login-screenshot/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/screenshot/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
