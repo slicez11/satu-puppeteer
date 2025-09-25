@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import chromium from "@sparticuz/chromium";
 export async function POST(request: NextRequest) {
     const { username, password } = await request.json();
 
@@ -21,13 +21,12 @@ export async function POST(request: NextRequest) {
         };
 
         if (isVercel) {
-            const chromium = (await import("@sparticuz/chromium")).default;
             puppeteer = await import("puppeteer-core");
-            
+
             // Configure chromium for Vercel with explicit path
             const executablePath = await chromium.executablePath();
             console.log('Chromium executable path:', executablePath);
-            
+
             launchOptions = {
                 ...launchOptions,
                 args: [
